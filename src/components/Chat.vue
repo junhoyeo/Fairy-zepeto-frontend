@@ -133,18 +133,18 @@ export default {
       message_input: '',
       popup: false,
       message: '',
-      sended: false
+      sended: false,
     };
   },
   methods: {
-    send () {
-        this.message = this.message_input
-        this.message_input = ''
-        this.sended  = true
+    send() {
+      this.message = this.message_input;
+      this.message_input = '';
+      this.sended = true;
     },
-    open () {
-        this.$swal('선물 완료!')
-    }
+    open() {
+      this.$swal('선물 완료!');
+    },
   },
   created() {
 

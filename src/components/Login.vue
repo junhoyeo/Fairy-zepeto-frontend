@@ -29,18 +29,18 @@ export default {
       }
       this.$http.post('/auth/', {
         name: this.username,
-        password: this.password
+        password: this.password,
       })
         .then((res) => {
-          console.log(res)
-          this.$session.set('token', res.data.token)
-          this.$session.set('user', res.data.user._id)
+          console.log(res);
+          this.$session.set('token', res.data.token);
+          this.$session.set('user', res.data.user._id);
           // alert('로그인 완료');
-          this.$router.push({ name: 'Main'})
+          this.$router.push({ name: 'Main' });
         })
         .catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
   },
   created() {

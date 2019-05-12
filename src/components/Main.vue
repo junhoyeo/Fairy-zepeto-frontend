@@ -29,40 +29,40 @@ import router from '../router';
 
 export default {
   name: 'main',
-//   beforeCreate: function () {
-//     if (!this.$session.exists()) {
-//       this.$router.push('/login')
-//     }
-//   },
+  //   beforeCreate: function () {
+  //     if (!this.$session.exists()) {
+  //       this.$router.push('/login')
+  //     }
+  //   },
   data() {
     return {
-        token: this.$session.get('token'),
-        user_id: this.$session.get('user'),
-        user: {},
-        coin: 12000,
-        cover: require('../assets/img/zepeto.png')
+      token: this.$session.get('token'),
+      user_id: this.$session.get('user'),
+      user: {},
+      coin: 12000,
+      cover: require('../assets/img/zepeto.png'),
     };
   },
   methods: {
     getUser() {
-        this.$http.get(`/user/${this.user_id}`)
-            .then((res) => {
-                this.user = res.data
-                console.log(this.user)
-                this.getCover()
-            })
+      this.$http.get(`/user/${this.user_id}`)
+        .then((res) => {
+          this.user = res.data;
+          console.log(this.user);
+          this.getCover();
+        });
     },
     getCover() {
-        // this.$http.get(`/render/cover/${this.user.zepeto_id}`)
-        //     .then((res) => {
-        //         console.log(res)
-        //         this.cover = res.data
-        //     })
-        this.cover = `http://localhost:5000/render/cover/${this.user.zepeto_id}`
-    }
+      // this.$http.get(`/render/cover/${this.user.zepeto_id}`)
+      //     .then((res) => {
+      //         console.log(res)
+      //         this.cover = res.data
+      //     })
+      this.cover = `http://localhost:5000/render/cover/${this.user.zepeto_id}`;
+    },
   },
   created() {
-    this.getUser()
+    this.getUser();
   },
 };
 </script>

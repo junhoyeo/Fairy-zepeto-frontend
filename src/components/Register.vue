@@ -43,16 +43,16 @@ export default {
         return;
       }
       this.$http.post('/user/register', {
-        "name": this.username,
-        "password": this.password,
-        "zepeto_id": this.code,
-        "location": this.nationality
+        name: this.username,
+        password: this.password,
+        zepeto_id: this.code,
+        location: this.nationality,
       })
-      .then((res) => {
-        console.log(res);
-        this.$swal('가입 완료!')
-        this.$router.push({ name: 'Login' })
-      })
+        .then((res) => {
+          console.log(res);
+          this.$swal('가입 완료!');
+          this.$router.push({ name: 'Login' });
+        });
     },
   },
   created() {

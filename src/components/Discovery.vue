@@ -68,16 +68,16 @@ export default {
   name: 'discovery',
   data() {
     return {
-        token: this.$session.get('token'),
-        user_id: this.$session.get('user'),
-        loading: true,
-        target: '',
+      token: this.$session.get('token'),
+      user_id: this.$session.get('user'),
+      loading: true,
+      target: '',
       location: '',
       name: '',
       num: 0,
       question: {
-          question: '',
-          answers: ['', '']
+        question: '',
+        answers: ['', ''],
       },
       op_answer: 2,
       my_answer: 2,
@@ -85,109 +85,108 @@ export default {
       cover1: require('../assets/img/zepeto.png'),
       cover2: require('../assets/img/zepeto.png'),
       message: '',
-      chat: {}
+      chat: {},
     };
   },
   computed: {
     nationality_image() {
       if (this.location == 'korean') return korea;
-      else return usa;
+      return usa;
     },
   },
   methods: {
-    match () {
-        this.$socket.emit('match', this.token)
-        this.loading = true
+    match() {
+      this.$socket.emit('match', this.token);
+      this.loading = true;
     },
-    getProfile (zepeto_id) {
-        return `http://localhost:5000/render/${zepeto_id}`
+    getProfile(zepeto_id) {
+      return `http://localhost:5000/render/${zepeto_id}`;
     },
     getUser() {
-        this.$http.get(`/user/${this.user_id}`)
-            .then((res) => {
-                this.user = res.data
-                console.log(this.user)
-                this.cover2 = this.getProfile(this.user.zepeto_id)
-            })
+      this.$http.get(`/user/${this.user_id}`)
+        .then((res) => {
+          this.user = res.data;
+          console.log(this.user);
+          this.cover2 = this.getProfile(this.user.zepeto_id);
+        });
     },
     send() {
-        if (this.message){
-            this.$socket.emit('talk', {
-                token: this.token,
-                target: this.target, 
-                message: this.message
-            })
-            this.message = ''
-        }
+      if (this.message) {
+        this.$socket.emit('talk', {
+          token: this.token,
+          target: this.target,
+          message: this.message,
+        });
+        this.message = '';
+      }
     },
-    load_question () {
-        this.$socket.emit('question', {token: this.token})
-        this.op_answer = this.my_answer = 2
+    load_question() {
+      this.$socket.emit('question', { token: this.token });
+      this.op_answer = this.my_answer = 2;
     },
-    answer_question (answer) {
-        if (answer) {
-            this.my_answer = this.question.answers.indexOf(answer);
-            this.$socket.emit('answer', {
-                token: this.token,
-                answer: answer
-            })
-        }
-    }
+    answer_question(answer) {
+      if (answer) {
+        this.my_answer = this.question.answers.indexOf(answer);
+        this.$socket.emit('answer', {
+          token: this.token,
+          answer,
+        });
+      }
+    },
   },
   sockets: {
-        paired (data) {
-            this.loading = false
-            this.location = data.location
-            this.name = data.name
-            this.target = data._id
-            this.cover1 = this.getProfile(data.zepeto_id)
-            this.getUser()
-            this.load_question()
-        },
-        ended () {
-            this.loading = true
-            this.num = 0
-            this.question = {
-                question: '',
-                answers: ['', '']
-            }
-            this.questions = []
-            this.op_answer = this.my_answer = 2
-        },
-        received (data) {
-            this.chat = data
-        },
-        questioned (data) {
-            if (!this.questions.includes(data.id)) this.num ++;
-            this.question = data
-            this.questions.push(data.id)
-        },
-        opponent_answered (data) {
-            this.op_answer = this.question.answers.indexOf(data.answer)
-        },
-        clear () {
-            setTimeout(() => {
-                this.load_question()
-            }, 2000);
-        },
-        end_questions () {
-            this.$swal.fire({
-                title: '대화 종료!',
-                text: "친구신청을 하시겠습니까?",
-                type: 'success',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: '신청'
-            }).then((result) => {
-                if (result.value)
-                    this.$swal('신청되었어요!')
-                this.match()
-            })
-        }
+    paired(data) {
+      this.loading = false;
+      this.location = data.location;
+      this.name = data.name;
+      this.target = data._id;
+      this.cover1 = this.getProfile(data.zepeto_id);
+      this.getUser();
+      this.load_question();
+    },
+    ended() {
+      this.loading = true;
+      this.num = 0;
+      this.question = {
+        question: '',
+        answers: ['', ''],
+      };
+      this.questions = [];
+      this.op_answer = this.my_answer = 2;
+    },
+    received(data) {
+      this.chat = data;
+    },
+    questioned(data) {
+      if (!this.questions.includes(data.id)) this.num++;
+      this.question = data;
+      this.questions.push(data.id);
+    },
+    opponent_answered(data) {
+      this.op_answer = this.question.answers.indexOf(data.answer);
+    },
+    clear() {
+      setTimeout(() => {
+        this.load_question();
+      }, 2000);
+    },
+    end_questions() {
+      this.$swal.fire({
+        title: '대화 종료!',
+        text: '친구신청을 하시겠습니까?',
+        type: 'success',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '신청',
+      }).then((result) => {
+        if (result.value) this.$swal('신청되었어요!');
+        this.match();
+      });
+    },
   },
   created() {
-        this.match()
+    this.match();
   },
 };
 </script>
